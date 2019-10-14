@@ -2,20 +2,23 @@
  * DIO.h
  *
  *  Created on: Sep 22, 2019
- *      Author: Mohammed
+ *      Author: HOBA
  */
 
 #ifndef DIO_H_
 #define DIO_H_
 
-#include <avr/io.h>
-#include "std_types.h"
+#include "DIO_cnfg.h"
 
-typedef enum {SW0,SW1}Pin_t;
 
-void DIO_init(void);
+ACK DIO_init(void);
+ACK DIO_init_PIN(uint8 PORT ,uint8 PIN,uint8 DIRECTION, uint8 PULL_RESISTOR);
+ACK DIO_read(uint8 PORT ,uint8 PIN,uint8 *VALUE);
+ACK DIO_read_Pin(uint8 PORT ,uint8 PIN,uint8 *VALUE);
+ACK DIO_write(uint8 PORT ,uint8 PIN,uint8 VALUE);
+ACK DIO_Write_Pin(uint8 PORT ,uint8 PIN,uint8 VALUE);
 
-uint8 DIO_read(Pin_t Pin) ;
+
 
 
 #endif /* DIO_H_ */
