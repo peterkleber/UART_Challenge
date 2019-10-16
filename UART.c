@@ -8,6 +8,7 @@
 #include "UART.h"
 
 Std_Func_t UART_init() {
+
 	Std_Func_t retval = OK;
 
 	//Enabling receiver and transmitter
@@ -19,21 +20,15 @@ Std_Func_t UART_init() {
 
 	//Setting URSEL bit to write to UCSRC
 	UCSRC |= (1 << URSEL);
-	//UBRRH |= (1 << URSEL);
 
-	//Configure UART to be Asynchronous (UMSEL= 0)
-	UCSRC &= ~(1 << UMSEL);
-
+	/********************************************************/
 	//Configure UART Parity
 	switch (UART_cnfg_struct.Parity) {
 	case NO_Parity:
 		//No parity UPM1&UPM0 = 0
-		UCSRC &= ~(1 << UPM1);
-		UCSRC &= ~(1 << UPM0);
 		break;
 	case Even:
 		//Even parity UPM1 = 1 & UPM0 = 0
-		UCSRC &= ~(1 << UPM0);
 		UCSRC |= (1 << UPM1);
 		break;
 	case Odd:
@@ -44,11 +39,9 @@ Std_Func_t UART_init() {
 	default:
 		retval = NOK;
 	}
-
+	/********************************************************/
 	//Configure No of stop bits USBS = 0 (1 stop bit )/USBS = 1 (2 stop bits )
-	if (UART_cnfg_struct.No_of_stop_bits == 1) {
-		UCSRC &= ~(1 << USBS);
-	} else if (UART_cnfg_struct.No_of_stop_bits == 2) {
+	if (UART_cnfg_struct.No_of_stop_bits == 2) {
 		UCSRC |= (1 << USBS);
 	} else {
 		retval = NOK;
@@ -91,36 +84,44 @@ Std_Func_t UART_init() {
 	}
 
 	//Setting Baudrate
-	if (UART_cnfg_struct.Baudrate == 9600) {
+	if (UART_cnfg_struct.Baudrate == ((uint16) 9600)) {
 		UBRRH &= ~(1 << URSEL); //The URSEL must be zero when writing the UBRRH.
 
-		/* baud rate=9600 & Fosc=8MHz -->  UBBR=( Fosc / (16 * baud rate) ) - 1 = 51 */
+		// baud rate=9600 & Fosc=8MHz -->  UBBR=( Fosc / (16 * baud rate) ) - 1 = 51
 		UBRRH = 0;
 		UBRRL = 51;
-		/*
-		 * UBBRL = (uint8) x
-		 * UBBH = (x>>8)&(0x0F)
-		 */
+
 	} else {
 		retval = NOK;
 	}
 
 	return retval;
-}
-
-Std_Func_t UART_send(const uint8 Data_to_sent){
-
-	while(!(UCSRA & (1<<UDRE))){}
-		UDR = Data_to_sent;
-
-		return OK ;
 
 }
 
-Std_Func_t UART_recieve(uint8 *Data_recieved){
+Std_Func_t UART_send(const uint8 Data_to_sent) {
 
-	while( !(UCSRA & (1<<RXC)) ){}
-	*Data_recieved = UDR ;
+	/*
+	 *
+	 UDR = data;
+	 while(BIT_IS_CLEAR(UCSRA,TXC)){} // Wait until the transimission is complete TXC = 1
+	 SET_BIT(UCSRA,TXC); // Clear the TXC flag
+	 * */
 
-	return OK ;
+	while (!(UCSRA & (1 << UDRE))) {
+	}
+
+	UDR = Data_to_sent;
+
+	return OK;
+
+}
+
+Std_Func_t UART_recieve(uint8 *Data_recieved) {
+
+	while (!(UCSRA & (1 << RXC))) {
+	}
+	*Data_recieved = UDR;
+
+	return OK;
 }
