@@ -5,27 +5,29 @@
  *      Author: PeterKleber
  */
 
-//#include <util/delay.h>
+#include <util/delay.h>
 #include "UART.h"
 #include "LCD.h"
 
-uint8 Rx_Data = 0 ;
+uint8 Rx_Data = 0;
+uint8 Prev_Rx_Data = 0;
 
-int main(){
+int main() {
+
 	//Initialize UART
 	UART_init();
 
 	LCD_init();
-    LCD_clear();
+	LCD_clear();
 
-	while(1){
-
-		/*UART_send(0b01010101);
-		_delay_ms(1000);*/
+	while (1) {
 
 		UART_recieve(&Rx_Data);
-		LCD_clear();
-		LCD_displayChar(Rx_Data);
-
+		if (Rx_Data != Prev_Rx_Data) {
+			LCD_clear();
+			LCD_Write_Integer_Number(Rx_Data);
+			Prev_Rx_Data = Rx_Data;
+		}
 	}
+
 }

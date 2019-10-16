@@ -11,10 +11,6 @@
 #include <avr/io.h>
 #include "UART_cnfg.h"
 
-typedef enum {
-	NOK, OK
-} Std_Func_t;
-
 Std_Func_t UART_init();
 
 Std_Func_t UART_send(const uint8 Data_to_sent);
