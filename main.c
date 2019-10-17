@@ -33,7 +33,7 @@ static uint16 Counter_Sec=0;
 static uint16 Current_Distance =0;
 static uint16 Total_Distance = 0;
 static uint16 Previous_Speed=0;
-static float Current_Speed=0;
+static uint16 Current_Speed=0;
 
 //----------------- Section of  Global Flags -------------------------//
 static uint8 Display_Flag =0;
@@ -106,7 +106,6 @@ void Switch_OFF (void)
 		Switch_flag = SWITCH_OFF;
 		Display_Flag = 1;
 		LCD_4Bits_Clear();
-		
 		Busy_Flag = 0;
 	}		
 }
@@ -160,7 +159,7 @@ void UART_Recieve_Data (void)
 				}
 			}
 			
-			Total_Distance += (Current_Speed/2);
+			Total_Distance += (Current_Speed);
 
 		}
 		
