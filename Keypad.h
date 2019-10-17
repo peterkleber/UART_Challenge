@@ -34,6 +34,8 @@
 #define YES	   1
 #define NO     0
 
+#define TIMEROUT_VALUE 18
+
 // Determine whether you need to return Integer Numbers from keypad or Ascii Value (Characters) from KeyPad
 #define PRINT_NUMBERS_From_KEYPAD YES
 
