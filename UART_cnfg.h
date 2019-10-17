@@ -10,12 +10,14 @@
 
 #include "std_types.h"
 
-typedef enum {
-	NO_Parity, Even, Odd
-} Prity_t;
+typedef enum {B_9600,} Baudrate_t;
+
+typedef enum {NO_Parity, Even, Odd} Prity_t;
+typedef enum {No_Interrupt,Interrupt} Interrupt_t;
+
 
 typedef struct {
-	uint16 Baudrate;
+	Baudrate_t Baudrate;
 
 	uint8 No_of_stop_bits;
 
@@ -23,6 +25,7 @@ typedef struct {
 	uint8 No_of_parity_bits;
 
 	uint8 No_of_data_bits;
+	Interrupt_t Interrupt ;
 
 } UART_cnfg_t;
 
