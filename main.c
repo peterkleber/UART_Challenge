@@ -60,37 +60,23 @@ void Second_Count (void)
 		Busy_Flag = 1;
 		Counter_Sec++;
 		Display_Flag=1;
-		
-		if (Speed_Change_Flag==1)
-		{
-			Current_Time = Counter_Sec;
-			LCD_4Bits_Clear();
-			LCD_4Bits_Print_String(1,1,"Speed=");
-			LCD_4Bits_Print_String(2,1,"Time=");
-			LCD_4Bits_Print_Number(2,7,Counter_Sec);
-			LCD_4Bits_Print_Number(1,8,Speed);
-			
-			Speed_Change_Flag=0;
-		}
+
 		
 		Calculate_Distance ();
 				
 		if(UART_Recieve_Flag == READY)  //initiate the transmission
-		{
-				//UART_send('S');	
+		{	
 				static uint16 Counter_index = 0;
-				uint8 Buffer_Send[4]={0,0,0,0};	
-						
+				uint8 Buffer_Send[2]={0,0};	
+
 				Buffer_Send[0]='S';
 				Buffer_Send[1]=Speed;
-				Buffer_Send[2]='D';
-				Buffer_Send[3]=Distance;
-					
+				
 				UART_send(Buffer_Send[Counter_index]);
 				
 				Counter_index++;
-						
-				if(Counter_index > 3)
+
+				if(Counter_index == 2)
 				{
 					Counter_index = 0;
 				}
@@ -109,7 +95,6 @@ void Increment_Speed (void)
 	if(Busy_Flag == 0)
 	{	
 		Busy_Flag = 1;
-		Speed_Change_Flag=1;	
 		Speed++;
 		Display_Flag = 1;
 		Busy_Flag = 0;
@@ -128,10 +113,12 @@ void Decrement_Speed (void)
 			LCD_4Bits_Clear();
 			LCD_4Bits_Print_String(1,1,"Speed=");
 			LCD_4Bits_Print_String(2,1,"Time=");
+			LCD_4Bits_Print_String(1,10,"m/sec");
+			LCD_4Bits_Print_String(2,12,"sec");
 			LCD_4Bits_Print_Number(2,7,Counter_Sec);	
 		}
 		
-		Speed_Change_Flag=1;
+		
 		if(Speed > 1)
 		{
 			Speed--;
@@ -187,35 +174,7 @@ void UART_Recieve_Data (void)
 	}
 }
 
-/*
-void UART_Transmit_Data (void)
-{	
-	
-	if(Busy_Flag == 0)
-	{
-		Busy_Flag = 1;
-		
-		static uint16 Counter_index = 0;
-		uint8 Buffer_Send[4]={0,0,0,0};
-			
-		Counter_index++;
-		
-		Buffer_Send[0]='S';
-		Buffer_Send[1]=Speed;
-		Buffer_Send[2]='D';
-		Buffer_Send[3]=Distance;
-		
-		UART_send(Buffer_Send[Counter_index]);
-		
-		if(Counter_index == 3)
-		{
-			Counter_index = 0;
-		}
 
-		Busy_Flag = 0;
-	}	
-}
-*/
 
 //--------------------------------------------------------------------------------------------------------------------------//
 
@@ -241,14 +200,14 @@ int main()
 	
 	
 	 UART_Set_Callback_RX(UART_Recieve_Data);
-
-	 //UART_Set_Callback_TX(UART_Transmit_Data);
 	
 	Speed=KEYPAD_INPUT_Number();
 	
 	LCD_4Bits_Clear();
 	LCD_4Bits_Print_String(1,1,"Speed=");
 	LCD_4Bits_Print_String(2,1,"Time=");
+	LCD_4Bits_Print_String(1,10,"m/sec");
+	LCD_4Bits_Print_String(2,12,"sec");
 	LCD_4Bits_Print_Number(1,8,Speed);
 	
 	INTP_vidInit();
