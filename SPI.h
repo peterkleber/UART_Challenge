@@ -19,4 +19,6 @@ Std_Func_t SPI_send(const uint8 Data_to_sent);
 
 Std_Func_t SPI_recieve(uint8 *Data_recieved);
 
+Std_Func_t SPI_Set_Callback(void (*ptr)());
+
 #endif /* SPI_H_ */

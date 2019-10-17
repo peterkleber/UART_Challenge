@@ -9,8 +9,8 @@
 
 SPI_Config_t SPI_Config ={
 		Master,
-		No_Interrupt,
-		MSB,
+		Interrupt,
+		LSB,
 		Clock_Polarity_Low,
 		Clock_Phase_High,
 		Fosc_4,
