@@ -77,7 +77,24 @@ void Second_Count (void)
 				
 		if(UART_Recieve_Flag == READY)  //initiate the transmission
 		{
-				UART_send('S');	
+				//UART_send('S');	
+				static uint16 Counter_index = 0;
+				uint8 Buffer_Send[4]={0,0,0,0};	
+						
+				Buffer_Send[0]='S';
+				Buffer_Send[1]=Speed;
+				Buffer_Send[2]='D';
+				Buffer_Send[3]=Distance;
+					
+				UART_send(Buffer_Send[Counter_index]);
+				
+				Counter_index++;
+						
+				if(Counter_index > 3)
+				{
+					Counter_index = 0;
+				}
+
 				
 		}
 		
@@ -170,7 +187,7 @@ void UART_Recieve_Data (void)
 	}
 }
 
-
+/*
 void UART_Transmit_Data (void)
 {	
 	
@@ -198,7 +215,7 @@ void UART_Transmit_Data (void)
 		Busy_Flag = 0;
 	}	
 }
-
+*/
 
 //--------------------------------------------------------------------------------------------------------------------------//
 
@@ -225,7 +242,7 @@ int main()
 	
 	 UART_Set_Callback_RX(UART_Recieve_Data);
 
-	 UART_Set_Callback_TX(UART_Transmit_Data);
+	 //UART_Set_Callback_TX(UART_Transmit_Data);
 	
 	Speed=KEYPAD_INPUT_Number();
 	
